@@ -1,0 +1,71 @@
+{
+  "name":"uga-law/experiential-project",
+  "type":"project",
+  "description": "Project Template for Drupal 8 sites built with the Experiential Timesheet distribution.",
+  "require":{
+    "uga-law/experiential":"*",
+    "php": ">=5.6",
+    "composer/installers": "^1.2",
+    "cweagans/composer-patches": "^1.6.5",
+    "drupal-composer/drupal-scaffold": "^2.5",
+    "drupal/console": "^1.0.2",
+    "drupal/core": "^8.7.0",
+    "drush/drush": "^9.0.0",
+    "vlucas/phpdotenv": "^2.4",
+    "webflo/drupal-finder": "^1.0.0",
+    "webmozart/path-util": "^2.3",
+    "zaporylie/composer-drupal-optimizations": "^1.0"
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://packages.drupal.org/8"
+    },
+    {
+      "type":"github",
+      "url":"git@github.com:UGA-Law/experiential.git",
+      "no-api": true
+    }
+  ],
+  "extra":{
+    "composer-exit-on-patch-failure": true,
+    "patchLevel": {
+        "drupal/core": "-p2"
+    },
+    "installer-paths": {
+        "web/core": ["type:drupal-core"],
+        "web/libraries/{$name}": ["type:drupal-library"],
+        "web/modules/contrib/{$name}": ["type:drupal-module"],
+        "web/profiles/contrib/{$name}": ["type:drupal-profile"],
+        "web/themes/contrib/{$name}": ["type:drupal-theme"],
+        "drush/Commands/{$name}": ["type:drupal-drush"]
+    },
+    "drupal-scaffold": {
+        "initial": {
+            ".editorconfig": "../.editorconfig",
+            ".gitattributes": "../.gitattributes"
+        }
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "scripts": {
+    "post-install-cmd": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
+    "post-update-cmd": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
+    "nuke":[
+        "rm -f .editorconfig",
+        "rm -f .gitattributes",
+        "rm -rf vendor/",
+        "rm -rf web/",
+        "rm -f composer.lock",
+        "ddev stop",
+        "ddev remove --remove-data --omit-snapshot"
+    ],
+    "boot":[
+        "composer install",
+        "ddev config",
+        "ddev auth ssh",
+        "ddev start"
+    ]
+    }
+}
